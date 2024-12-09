@@ -1,0 +1,203 @@
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>The Enigma Protocol</title>
+	<link rel="stylesheet" href="css/style2.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="css/mobile.css">
+	<script src="js/mobile.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="page">
+	<div id="header">
+			<div>
+				<a href="index.html" class="logo"><img src="images/logo.png" alt=""></a>
+				<ul id="navigation">
+					<li>
+						<a href="index.html">Home</a>
+					</li>
+					<li>
+						<a href="about.html">Plot</a>
+					</li>
+					<li class="selected">
+						<a href="contact.html">The Enigma Protocol</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: #161b22;
+            padding: 20px;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+        }
+        h1 {
+            text-align: center;
+            color: #58a6ff;
+            text-shadow: 1px 1px 5px rgba(88, 166, 255, 0.8);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #58a6ff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #58a6ff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #58a6ff;
+            color: #0d1117;
+        }
+        #output, #rank {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #58a6ff;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            display: none;
+        }
+        #timer {
+            font-size: 20px;
+            color: #f00;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+    <div class="container">
+        <h1>Cipher Nexus: The Enigma Protocol</h1>
+        <p>Decrypt the message below to advance to the next mission. Be quick—time is running out!</p>
+        
+        <div id="timer">Time Left: 60s</div>
+        
+        <label for="cipherInput">Cipher Text:</label>
+        <input type="text" id="cipherInput" placeholder="Encrypted text will appear here..." readonly>
+
+        <label for="keyInput">Enter Decryption Key:</label>
+        <input type="text" id="keyInput" placeholder="e.g., ROT13 or shift value">
+
+        <button onclick="processCipher()">Decrypt</button>
+        
+        <div id="output"></div>
+        <div id="rank"></div>
+    </div>
+    <script>
+        let timeRemaining = 60;
+        let currentRank = "Junior Cryptographer";
+        let missionsCompleted = 0;
+
+        const cipherText = "GUVF VF N FRPERG ZRFFNTR"; // ROT13 example
+
+        // Display cipher text
+        document.getElementById("cipherInput").value = cipherText;
+
+        // Timer logic
+        const timer = setInterval(() => {
+            const timerDiv = document.getElementById("timer");
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                timerDiv.textContent = "Mission Failed!";
+                alert("You ran out of time! The enemy intercepted our communications.");
+            } else {
+                timerDiv.textContent = `Time Left: ${timeRemaining--}s`;
+            }
+        }, 1000);
+
+        // Cipher processing
+        function processCipher() {
+            // Get user input
+            const key = document.getElementById("keyInput").value.trim().toUpperCase();
+
+            // Validate input
+            if (!key) {
+                alert("Please enter a decryption key.");
+                return;
+            }
+
+            // Decrypt using ROT13
+            let decryptedMessage = "";
+            if (key === "ROT13") {
+                decryptedMessage = cipherText.replace(/[A-Za-z]/g, function (char) {
+                    return String.fromCharCode(
+                        char.charCodeAt(0) + (char.toUpperCase() <= "M" ? 13 : -13)
+                    );
+                });
+            } else {
+                decryptedMessage = "ERROR: Unknown decryption key.";
+            }
+
+            // Show output
+            const outputDiv = document.getElementById("output");
+            outputDiv.textContent = decryptedMessage
+                ? `Decrypted Message: ${decryptedMessage}`
+                : "ERROR: Decryption failed.";
+            outputDiv.style.display = "block";
+
+            // Check success and update rank
+            if (decryptedMessage === "THIS IS A SECRET MESSAGE") {
+                missionsCompleted++;
+                updateRank();
+                clearInterval(timer);
+            }
+        }
+
+        // Rank updating logic
+        function updateRank() {
+            let rankDiv = document.getElementById("rank");
+            if (missionsCompleted === 1) {
+                currentRank = "Senior Cryptographer";
+            } else if (missionsCompleted === 2) {
+                currentRank = "Master Codebreaker";
+            }
+            rankDiv.textContent = `Missions Completed: ${missionsCompleted}\nCurrent Rank: ${currentRank}`;
+            rankDiv.style.display = "block";
+        }
+    </script>
+		<div id="footer">
+			<div class="footnote">
+				<div>
+					<p>&copy; Paul Durjoy Susmit | 24314069</p>
+					<p>Insipired from <a href="https://freewebsitetemplates.com/preview/space-science/index.html">this template</a></p>
+				</div>
+			</div>
+		</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
